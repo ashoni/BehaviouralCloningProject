@@ -67,7 +67,7 @@ To detect the right number of epochs I divided my dataset into training and vali
 Also I believe that the used generator should help against the overfitting: all the elements are taken in random order and have random changes applied which means that every epoch training and validation datasets are different.
 
 <p align="center">
-    <img src="train_validation_plot.png" width="480" alt="simulator" />
+    <img src="train_validation_plot.png" width="320" alt="simulator" />
 </p>
 
 ### Is the training data chosen appropriately?
@@ -79,14 +79,14 @@ The creation of the dataset is done in several steps.
 
 3. Flip all the images so the steering angle was positive and break them into the classes. Two images are in the same class if their rounded to the first significant digit values are equal. The thing is, first I started with a small dataset. And then I spent a lot of time trying to predict the angles based on the images from the center camera only. To achieve it, I came up with a generator which chose elements from the dataset by first choosing a class and then choosing an element from this class. Since the initial distribution wasn't uniform, I set class weights to influence on the probability of choosing images with high or low angles. E.g. when I set all the weights to be equal, the car was getting from side to side. When I set weights for 0.0 and 0.1 classes 3 times bigger than others, the car tended to prefer going straight. When I set the weights equal to the number of elements in classes, it almost never turned (since there are 50% images with angle ~0). Then I decided to manually check images in classes 0.6-1. The initial numbers of elements in these classes was low (e.g. there were only 2 images for 1.0) so it took about 40 minutes. I discovered that a lot of images (including the 1 of 2 images in 1.0 class) were incorrect. Obviously they appeared because the person who created the Udacity data tried to go from one side to another and back in order to create images with large steering angles and recorded not only paths from the road side but also the paths to the road side. Cleaning these images improved the network results. Then I thought that if even the person who tried to go from side to side managed to generate only 2 images with angle close to 1, then are they really this important? When I looked at the images I didn't see much difference between the images with 0.6 angle and images with 1.0 angle. I set 0 weight for the angles >0.6. It improved the performance again but not enough. Anyway, the number of images in these classes allowed to memorize them, not to generalize. When I moved to a large dataset (from all 3 cameras), I discovered that I don't need these little tricks any more, now it's enough data for the network to ignore the errors. However, I decided not to remove the classes because it's a convenient way of balancing data (if needed).  
 
-4. The generator performes the preprocessing for the images. Every image is cropped (to remove everything above the horizon and the car itselfm first doesn't give much information, second creates unnecessary difference between the central and side camera images), flipped (with 50% chance), shifted, shadow added (with 50% chance), the brightness is changed (0.6 to 1.2 from the current level, the training set is made in a clear sunny weather so it made more sense to make the image darker) and it's resized to 64*64 (good choice according to http://cs231n.github.io/convolutional-networks/). Here is an example of image processing:
+4. The generator performes the preprocessing for the images. Every image is cropped (to remove everything above the horizon and the car itselfm first doesn't give much information, second creates unnecessary difference between the central and side camera images), flipped (with 50% chance), shifted, shadow added (with 50% chance), the brightness is changed (0.6 to 1.2 from the current level, the training set is made in a clear sunny weather so it made more sense to make the image darker) and it's resized to 64 * 64 (good choice according to http://cs231n.github.io/convolutional-networks/). Here is an example of image processing:
 
 <p align="center">
-    <img src="image1.png" width="480" alt="simulator" />
+    <img src="image1.png" width="320" alt="simulator" />
 </p>
 
 <p align="center">
-    <img src="image2.png" width="480" alt="simulator" />
+    <img src="image2.png" width="320" alt="simulator" />
 </p>
 
 I used the default Adam optimizer. 
