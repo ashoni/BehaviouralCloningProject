@@ -25,8 +25,7 @@ The submission includes a model.py file, drive.py, model.h5 and a writeup report
 
 ###Has an appropriate model architecture been employed for the task?
 The following architecture is used:
-____________________________________________________________________________________________________
-Layer (type)                     Output Shape          Param #     Connected to                     
+
 ====================================================================================================
 lambda_2 (Lambda)                (None, 64, 64, 3)     0           lambda_input_2[0][0]             
 ____________________________________________________________________________________________________
